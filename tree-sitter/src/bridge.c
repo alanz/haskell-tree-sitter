@@ -123,3 +123,75 @@ uint32_t ts_tree_cursor_copy_child_nodes(TSTreeCursor *cursor, Node *outChildNod
   }
   return count;
 }
+
+char *ts_node_string_p(TSNode *node) {
+  assert(node != NULL);
+  return ts_node_string(*node);
+}
+
+
+TSTree *ts_parser_parse_p(
+  TSParser *self,
+  const TSTree *old_tree,
+  TSInput *input) {
+  assert(self != NULL);
+  // old_tree is allowed to be null
+  assert(input != NULL);
+  return ts_parser_parse(self, old_tree, *input);
+}
+
+/*
+There is a problem with haskell FFI, in that parameters can either be
+basic, known types, or pointers to structs.
+The TSInput structure has a callback function which is
+
+  const char *(*read)(void *payload, uint32_t byte_index, TSPoint position, uint32_t *bytes_read);
+
+The position parameter is a TSPoint, rather than *TSPoint. This means
+FFI (to AZ understanding) cannot be used directly. But it is a
+callback, so we need to wrap the haskell callback.
+
+We create a structure for use in haskell instead, and the acceptable
+type signature, and then tap dance.
+*/
+
+
+// This structure can be provided by haskell FFI, the callback uses a pointer for position.
+typedef struct {
+  void *payload;
+  const char *(*haskell_read)(void *payload, uint32_t byte_index, TSPoint *position, uint32_t *bytes_read);
+  TSInputEncoding encoding;
+} TSHInput;
+
+const char *wrapped_read(void *hread,
+                   uint32_t byte_index, TSPoint position, uint32_t *bytes_read) {
+  fprintf( stderr, "*****wrapped_read (%p)\n", (void *) hread);
+  TSHInput * hinput = (TSHInput *)hread;
+  fprintf( stderr, "*****wrapped_read (%p,%p,%d)\n",
+           (void *)hinput->payload, (void *)hinput->haskell_read, hinput->encoding);
+  fprintf( stderr, "*****wrapped_read [%s]\n", hinput->payload);
+
+  // Call the haskell function with address of position
+  return (hinput->haskell_read)(hread, byte_index, &position, bytes_read);
+}
+
+TSTree *ts_parser_parse_p1(
+  TSParser *self,
+  const TSTree *old_tree,
+  TSHInput *hinput)
+{
+  TSInput input;
+  fprintf( stderr, "*****ts_parser_parse_p1 entered\n");
+  fprintf( stderr, "*****ts_parser_parse_p1 hinput=%p\n", (void *)hinput);
+  fprintf( stderr, "*****ts_parser_parse_p1 (%p,%p,%d)\n", (void *) hinput->payload, (void *)hinput->haskell_read, hinput->encoding);
+
+  fprintf( stderr, "*****ts_parser_parse_p1 str [%s]\n", hinput->payload);
+  assert(self != NULL);
+  // old_tree is allowed to be null
+  assert(hinput != NULL);
+  // Set the callback wrapper
+  input.payload  = (void *)hinput;
+  input.read     = wrapped_read;
+  input.encoding = hinput->encoding;
+  return ts_parser_parse(self, old_tree, input);
+}
