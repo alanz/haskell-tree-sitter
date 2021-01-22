@@ -28,6 +28,7 @@ import GHC.Generics
 import TreeSitter.Language
 import TreeSitter.Node
 import TreeSitter.Tree
+import Data.Void
 
 -- | A tree-sitter parser.
 --
@@ -76,13 +77,18 @@ typedef struct {
 
 type Payload = TSHInput
 
--- | TSHInput is like TSInput, but the ReadFunction uses Ptr TSPoint, not bare TSPoint
+-- | TSHInput is like TSInput, but the ReadFunction uses Ptr TSPoint,
+-- not bare TSPoint
 data TSHInput = TSHInput
-  { inputPayload  :: !(Ptr CChar)
+  -- TODO: make this TSHInput', for use in low level interaction which
+  -- needs a monomorphic type, and expose a phantom parameter version
+  -- with the actual type for the inputPayload.
+  { inputPayload  :: !(Ptr Void) -- ^ store anything, use 'castPtr' to
+                                 -- get it back. Be careful.
   , inputRead     :: !(FunPtr ReadFunction)
   , inputEncoding :: !TSInputEncoding
   }
-  deriving (Show, Eq, Generic)
+  deriving (Show,  Generic)
 
 -- | reader: payload byte_offset position bytes_read
 type ReadFunction = (Ptr Payload -> Word32 -> Ptr TSPoint -> Ptr Word32 -> IO CString)
