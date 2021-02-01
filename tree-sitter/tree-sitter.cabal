@@ -62,6 +62,7 @@ library
   exposed-modules:     TreeSitter.Parser
                      , TreeSitter.Language
                      , TreeSitter.Node
+                     , TreeSitter.Query
                      , TreeSitter.Symbol
                      , TreeSitter.Tree
                      , TreeSitter.Cursor

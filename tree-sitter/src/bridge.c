@@ -181,8 +181,8 @@ TSTree *ts_parser_parse_p1(
   TSHInput *hinput)
 {
   TSInput input;
-  fprintf( stderr, "*****ts_parser_parse_p1 entered\n");
-  fprintf( stderr, "*****ts_parser_parse_p1 hinput=%p\n", (void *)hinput);
+  /* fprintf( stderr, "*****ts_parser_parse_p1 entered\n"); */
+  /* fprintf( stderr, "*****ts_parser_parse_p1 hinput=%p\n", (void *)hinput); */
   fprintf( stderr, "*****ts_parser_parse_p1 (%p,%p,%d)\n", (void *) hinput->payload, (void *)hinput->haskell_read, hinput->encoding);
 
   fprintf( stderr, "*****ts_parser_parse_p1 str [%s]\n", hinput->payload);
@@ -194,4 +194,9 @@ TSTree *ts_parser_parse_p1(
   input.read     = wrapped_read;
   input.encoding = hinput->encoding;
   return ts_parser_parse(self, old_tree, input);
+}
+
+void ts_query_cursor_exec_p(TSQueryCursor *cursor, const TSQuery *query, TSNode *node)
+{
+  ts_query_cursor_exec(cursor, query, *node);
 }
