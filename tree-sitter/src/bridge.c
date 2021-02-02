@@ -129,6 +129,15 @@ char *ts_node_string_p(TSNode *node) {
   return ts_node_string(*node);
 }
 
+bool ts_node_is_missing_p(TSNode *node) {
+  assert(node != NULL);
+  return ts_node_is_missing(*node);
+}
+
+bool ts_node_has_error_p(TSNode *node) {
+  assert(node != NULL);
+  return ts_node_has_error(*node);
+}
 
 TSTree *ts_parser_parse_p(
   TSParser *self,

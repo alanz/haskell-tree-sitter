@@ -9,6 +9,8 @@ module TreeSitter.Node
 , FieldId(..)
 , ts_node_copy_child_nodes
 , ts_node_poke_p
+, ts_node_is_missing_p
+, ts_node_has_error_p
 -- * Convenience, for now
 , Struct(..)
 , evalStruct
@@ -182,3 +184,6 @@ foreign import ccall unsafe "src/bridge.c ts_node_poke_p" ts_node_poke_p :: Ptr 
 char *ts_node_string(TSNode);
 -}
 foreign import ccall safe "src/bridge.c ts_node_string_p" ts_node_string_p :: Ptr TSNode -> IO (Ptr CChar)
+
+foreign import ccall safe "src/bridge.c ts_node_is_missing_p" ts_node_is_missing_p :: Ptr TSNode -> IO Bool
+foreign import ccall safe "src/bridge.c ts_node_has_error_p"  ts_node_has_error_p  :: Ptr TSNode -> IO Bool
