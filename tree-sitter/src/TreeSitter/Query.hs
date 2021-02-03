@@ -107,7 +107,7 @@ instance Storable TSQueryMatch where
 -- } TSQueryCapture;
 
 data TSQueryCapture = TSQueryCapture
-  { qcNode :: Node,
+  { qcNode :: TSNode,
     qcIndex :: Word32
   }
   deriving (Show, Eq, Generic)
@@ -117,7 +117,7 @@ data TSQueryCapture = TSQueryCapture
 instance Storable TSQueryCapture where
   alignment _ = alignment (undefined :: TSQueryCapture)
   {-# INLINE alignment #-}
-  sizeOf _ = 80 + 4
+  sizeOf _ = (4 * 4 + 2 * 8) + 4
   {-# INLINE sizeOf #-}
   peek = evalStruct $ TSQueryCapture <$> peekStruct
                                      <*> peekStruct
@@ -204,7 +204,7 @@ void ts_query_cursor_exec(TSQueryCursor *, const TSQuery *, TSNode);
 -}
 -- ts_query_cursor_exec
 foreign import ccall safe "src/bridge.c ts_query_cursor_exec_p" ts_query_cursor_exec_p
-  :: Ptr TSQueryCursor -> Ptr TSQuery -> Ptr Node -> IO ()
+  :: Ptr TSQueryCursor -> Ptr TSQuery -> Ptr TSNode -> IO ()
 
 -- ---------------------------------------------------------------------
 -- ts_query_cursor_set_byte_range

@@ -129,6 +129,11 @@ char *ts_node_string_p(TSNode *node) {
   return ts_node_string(*node);
 }
 
+char *ts_node_string_extra_p(TSNode *node) {
+  assert(node != NULL);
+  return ts_node_string_extra(*node);
+}
+
 
 TSTree *ts_parser_parse_p(
   TSParser *self,
@@ -200,3 +205,4 @@ void ts_query_cursor_exec_p(TSQueryCursor *cursor, const TSQuery *query, TSNode 
 {
   ts_query_cursor_exec(cursor, query, *node);
 }
+

@@ -16,6 +16,7 @@ module TreeSitter.Node
 , pokeStruct
 
 , ts_node_string_p
+, ts_node_string_extra_p
 ) where
 
 import Foreign
@@ -45,6 +46,8 @@ nodeStartByte node = let TSNode b _ _ _ _ = nodeTSNode node in b
 data TSPoint = TSPoint { pointRow :: !Word32, pointColumn :: !Word32 }
   deriving (Show, Eq, Generic)
 
+-- First Word32 is the start byte corresponding to the TSPoint
+-- Last Word32 is the "ts_node__alias", which is the (internal) symbol type if known
 data TSNode = TSNode !Word32 !TSPoint !Word32 !(Ptr ()) !(Ptr ())
   deriving (Show, Eq, Generic)
 
@@ -182,3 +185,4 @@ foreign import ccall unsafe "src/bridge.c ts_node_poke_p" ts_node_poke_p :: Ptr 
 char *ts_node_string(TSNode);
 -}
 foreign import ccall safe "src/bridge.c ts_node_string_p" ts_node_string_p :: Ptr TSNode -> IO (Ptr CChar)
+foreign import ccall safe "src/bridge.c ts_node_string_extra_p" ts_node_string_extra_p :: Ptr TSNode -> IO (Ptr CChar)
