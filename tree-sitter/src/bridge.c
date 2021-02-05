@@ -129,7 +129,6 @@ char *ts_node_string_p(TSNode *node) {
   return ts_node_string(*node);
 }
 
-
 char *ts_node_string_extra_p(TSNode *node) {
   assert(node != NULL);
   return ts_node_string_extra(*node);
@@ -145,6 +144,10 @@ bool ts_node_has_error_p(TSNode *node) {
   return ts_node_has_error(*node);
 }
 
+char *ts_node_string_diagnostics_p(TSNode *node) {
+  assert(node != NULL);
+  return ts_node_string_diagnostics(*node);
+}
 
 TSTree *ts_parser_parse_p(
   TSParser *self,

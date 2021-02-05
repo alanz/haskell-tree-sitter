@@ -17,6 +17,8 @@ module TreeSitter.Node
 , peekStruct
 , pokeStruct
 
+, ts_node_string_diagnostics_p
+
 , ts_node_string_p
 , ts_node_string_extra_p
 ) where
@@ -191,3 +193,7 @@ foreign import ccall safe "src/bridge.c ts_node_string_extra_p" ts_node_string_e
 
 foreign import ccall safe "src/bridge.c ts_node_is_missing_p" ts_node_is_missing_p :: Ptr TSNode -> IO Bool
 foreign import ccall safe "src/bridge.c ts_node_has_error_p"  ts_node_has_error_p  :: Ptr TSNode -> IO Bool
+
+foreign import ccall safe "src/bridge.c ts_node_string_diagnostics_p" ts_node_string_diagnostics_p :: Ptr TSNode -> IO (Ptr CChar)
+
+-- gratuitous comment
