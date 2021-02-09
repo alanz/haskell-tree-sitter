@@ -202,9 +202,9 @@ TSTree *ts_parser_parse_p1(
   TSInput input;
   /* fprintf( stderr, "*****ts_parser_parse_p1 entered\n"); */
   /* fprintf( stderr, "*****ts_parser_parse_p1 hinput=%p\n", (void *)hinput); */
-  fprintf( stderr, "*****ts_parser_parse_p1 (%p,%p,%d)\n", (void *) hinput->payload, (void *)hinput->haskell_read, hinput->encoding);
+  /* fprintf( stderr, "*****ts_parser_parse_p1 (%p,%p,%d)\n", (void *) hinput->payload, (void *)hinput->haskell_read, hinput->encoding); */
 
-  fprintf( stderr, "*****ts_parser_parse_p1 str [%s]\n", hinput->payload);
+  /* fprintf( stderr, "*****ts_parser_parse_p1 str [%s]\n", hinput->payload); */
   assert(self != NULL);
   // old_tree is allowed to be null
   assert(hinput != NULL);
